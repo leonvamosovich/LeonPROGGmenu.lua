@@ -1,4 +1,4 @@
--- Инициализация графического интерфейса мода «LeonPROGG» для мобильных устройств
+-- Аниме стиль (Cyberpunk/Neon Anime Theme) для LeonPROGG
 local Players = game:GetService("Players")
 local RunService = game:GetService("RunService")
 local CoreGui = game:GetService("CoreGui")
@@ -8,7 +8,6 @@ local character = player.Character or player.CharacterAdded:Wait()
 local humanoid = character:WaitForChild("Humanoid")
 local rootPart = character:WaitForChild("HumanoidRootPart")
 
--- Параметры
 local flightSpeed = 50
 local customWalkSpeed = 32
 local isFlying = false
@@ -17,9 +16,8 @@ local isMenuVisible = true
 
 local bodyVelocity, bodyGyro
 
--- Создание главного окна GUI
 local screenGui = Instance.new("ScreenGui")
-screenGui.Name = "LeonPROGG_Menu"
+screenGui.Name = "LeonPROGG_AnimeMenu"
 screenGui.ResetOnSpawn = false
 
 pcall(function()
@@ -29,86 +27,105 @@ if not screenGui.Parent then
     screenGui.Parent = player:WaitForChild("PlayerGui")
 end
 
--- Основная панель (меню)
-local mainFrame = Instance.new("Frame")
-mainFrame.Name = "MainFrame"
-mainFrame.Size = UDim2.new(0, 220, 0, 200)
-mainFrame.Position = UDim2.new(0, 50, 0, 100)
-mainFrame.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
-mainFrame.BorderSizePixel = 0
-mainFrame.Active = true
-mainFrame.Draggable = true
-mainFrame.Parent = screenGui
-
--- Скругление углов панели
-local uiCorner = Instance.new("UICorner")
-uiCorner.CornerRadius = UDim.new(0, 8)
-uiCorner.Parent = mainFrame
-
--- Заголовок меню
-local titleLabel = Instance.new("TextLabel")
-titleLabel.Name = "Title"
-titleLabel.Size = UDim2.new(1, 0, 0, 40)
-titleLabel.BackgroundColor3 = Color3.fromRGB(45, 45, 45)
-titleLabel.Text = "LeonPROGG"
-titleLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
-titleLabel.TextSize = 18
-titleLabel.Font = Enum.Font.SourceSansBold
-titleLabel.Parent = mainFrame
-
-local titleCorner = Instance.new("UICorner")
-titleCorner.CornerRadius = UDim.new(0, 8)
-titleCorner.Parent = titleLabel
-
--- Кнопка сворачивания/открытия меню (плавающая иконка)
+-- Плавающая кнопка-кружок "LP" (красивая, с градиентом и обводкой)
 local toggleButton = Instance.new("TextButton")
 toggleButton.Name = "ToggleMenu"
-toggleButton.Size = UDim2.new(0, 40, 0, 40)
-toggleButton.Position = UDim2.new(0, 10, 0, 100)
-toggleButton.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+toggleButton.Size = UDim2.new(0, 50, 0, 50)
+toggleButton.Position = UDim2.new(0, 30, 0, 150)
+toggleButton.BackgroundColor3 = Color3.fromRGB(20, 15, 35)
 toggleButton.Text = "LP"
-toggleButton.TextColor3 = Color3.fromRGB(255, 255, 255)
-toggleButton.TextSize = 16
-toggleButton.Font = Enum.Font.SourceSansBold
+toggleButton.TextColor3 = Color3.fromRGB(255, 110, 199)
+toggleButton.TextSize = 18
+toggleButton.Font = Enum.Font.GothamBold
 toggleButton.Active = true
 toggleButton.Draggable = true
 toggleButton.Parent = screenGui
 
 local toggleCorner = Instance.new("UICorner")
-toggleCorner.CornerRadius = UDim.new(0, 20)
+toggleCorner.CornerRadius = UDim.new(1, 0) -- Идеальный круг
 toggleCorner.Parent = toggleButton
 
--- Кнопка Fly в меню
+local toggleStroke = Instance.new("UIStroke")
+toggleStroke.Color = Color3.fromRGB(255, 110, 199)
+toggleStroke.Thickness = 2
+toggleStroke.Parent = toggleButton
+
+-- Основное аниме-меню
+local mainFrame = Instance.new("Frame")
+mainFrame.Name = "MainFrame"
+mainFrame.Size = UDim2.new(0, 240, 0, 220)
+mainFrame.Position = UDim2.new(0, 95, 0, 150)
+mainFrame.BackgroundColor3 = Color3.fromRGB(18, 12, 30)
+mainFrame.BorderSizePixel = 0
+mainFrame.Active = true
+mainFrame.Draggable = true
+mainFrame.Parent = screenGui
+
+local mainCorner = Instance.new("UICorner")
+mainCorner.CornerRadius = UDim.new(0, 12)
+mainCorner.Parent = mainFrame
+
+local mainStroke = Instance.new("UIStroke")
+mainStroke.Color = Color3.fromRGB(160, 32, 240)
+mainStroke.Thickness = 2
+mainStroke.Parent = mainFrame
+
+-- Заголовок меню
+local titleLabel = Instance.new("TextLabel")
+titleLabel.Name = "Title"
+titleLabel.Size = UDim2.new(1, 0, 0, 45)
+titleLabel.BackgroundColor3 = Color3.fromRGB(30, 20, 50)
+titleLabel.Text = " ✨ LeonPROGG ✨ "
+titleLabel.TextColor3 = Color3.fromRGB(255, 150, 220)
+titleLabel.TextSize = 18
+titleLabel.Font = Enum.Font.GothamBold
+titleLabel.Parent = mainFrame
+
+local titleCorner = Instance.new("UICorner")
+titleCorner.CornerRadius = UDim.new(0, 12)
+titleCorner.Parent = titleLabel
+
+-- Кнопка Fly в аниме стиле
 local flyButton = Instance.new("TextButton")
 flyButton.Name = "FlyButton"
-flyButton.Size = UDim2.new(0, 180, 0, 45)
-flyButton.Position = UDim2.new(0, 20, 0, 55)
+flyButton.Size = UDim2.new(0, 200, 0, 45)
+flyButton.Position = UDim2.new(0, 20, 0, 60)
 flyButton.Text = "Fly: OFF"
-flyButton.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
-flyButton.TextColor3 = Color3.fromRGB(255, 255, 255)
-flyButton.TextSize = 16
-flyButton.Font = Enum.Font.SourceSans
+flyButton.BackgroundColor3 = Color3.fromRGB(35, 22, 60)
+flyButton.TextColor3 = Color3.fromRGB(220, 220, 255)
+flyButton.TextSize = 15
+flyButton.Font = Enum.Font.GothamSemibold
 flyButton.Parent = mainFrame
 
 local flyCorner = Instance.new("UICorner")
-flyCorner.CornerRadius = UDim.new(0, 6)
+flyCorner.CornerRadius = UDim.new(0, 8)
 flyCorner.Parent = flyButton
 
--- Кнопка Speedhack в меню
+local flyStroke = Instance.new("UIStroke")
+flyStroke.Color = Color3.fromRGB(110, 80, 180)
+flyStroke.Thickness = 1
+flyStroke.Parent = flyButton
+
+-- Кнопка Speedhack в аниме стиле
 local speedButton = Instance.new("TextButton")
 speedButton.Name = "SpeedButton"
-speedButton.Size = UDim2.new(0, 180, 0, 45)
-speedButton.Position = UDim2.new(0, 20, 0, 115)
-speedButton.Text = "Speedhack: OFF"
-speedButton.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
-speedButton.TextColor3 = Color3.fromRGB(255, 255, 255)
-speedButton.TextSize = 16
-speedButton.Font = Enum.Font.SourceSans
+speedButton.Size = UDim2.new(0, 200, 0, 45)
+speedButton.Position = UDim2.new(0, 20, 0, 120)
+speedButton.Text = "Speed: OFF"
+speedButton.BackgroundColor3 = Color3.fromRGB(35, 22, 60)
+speedButton.TextColor3 = Color3.fromRGB(220, 220, 255)
+speedButton.TextSize = 15
+speedButton.Font = Enum.Font.GothamSemibold
 speedButton.Parent = mainFrame
 
 local speedCorner = Instance.new("UICorner")
-speedCorner.CornerRadius = UDim.new(0, 6)
+speedCorner.CornerRadius = UDim.new(0, 8)
 speedCorner.Parent = speedButton
+
+local speedStroke = Instance.new("UIStroke")
+speedStroke.Color = Color3.fromRGB(110, 80, 180)
+speedStroke.Thickness = 1
+speedStroke.Parent = speedButton
 
 -- Логика сворачивания/разворачивания интерфейса
 toggleButton.MouseButton1Click:Connect(function()
@@ -122,7 +139,8 @@ flyButton.MouseButton1Click:Connect(function()
     
     if isFlying then
         flyButton.Text = "Fly: ON"
-        flyButton.BackgroundColor3 = Color3.fromRGB(0, 170, 0)
+        flyButton.BackgroundColor3 = Color3.fromRGB(120, 20, 100)
+        flyStroke.Color = Color3.fromRGB(255, 100, 200)
         
         bodyVelocity = Instance.new("BodyVelocity")
         bodyVelocity.Velocity = Vector3.new(0, 0, 0)
@@ -137,7 +155,8 @@ flyButton.MouseButton1Click:Connect(function()
         humanoid.PlatformStand = true
     else
         flyButton.Text = "Fly: OFF"
-        flyButton.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
+        flyButton.BackgroundColor3 = Color3.fromRGB(35, 22, 60)
+        flyStroke.Color = Color3.fromRGB(110, 80, 180)
         
         if bodyVelocity then bodyVelocity:Destroy() end
         if bodyGyro then bodyGyro:Destroy() end
@@ -151,12 +170,14 @@ speedButton.MouseButton1Click:Connect(function()
     isSpeedEnabled = not isSpeedEnabled
     
     if isSpeedEnabled then
-        speedButton.Text = "Speedhack: ON"
-        speedButton.BackgroundColor3 = Color3.fromRGB(0, 170, 0)
+        speedButton.Text = "Speed: ON"
+        speedButton.BackgroundColor3 = Color3.fromRGB(120, 20, 100)
+        speedStroke.Color = Color3.fromRGB(255, 100, 200)
         humanoid.WalkSpeed = customWalkSpeed
     else
-        speedButton.Text = "Speedhack: OFF"
-        speedButton.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
+        speedButton.Text = "Speed: OFF"
+        speedButton.BackgroundColor3 = Color3.fromRGB(35, 22, 60)
+        speedStroke.Color = Color3.fromRGB(110, 80, 180)
         humanoid.WalkSpeed = 16
     end
 end)
@@ -170,7 +191,7 @@ RunService.RenderStepped:Connect(function()
     end
 end)
 
--- Перезагрузка переменных при респавне персонажа
+-- Сброс при респавне
 player.CharacterAdded:Connect(function(newChar)
     character = newChar
     humanoid = newChar:WaitForChild("Humanoid")
@@ -178,7 +199,9 @@ player.CharacterAdded:Connect(function(newChar)
     isFlying = false
     isSpeedEnabled = false
     flyButton.Text = "Fly: OFF"
-    flyButton.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
-    speedButton.Text = "Speedhack: OFF"
-    speedButton.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
+    flyButton.BackgroundColor3 = Color3.fromRGB(35, 22, 60)
+    flyStroke.Color = Color3.fromRGB(110, 80, 180)
+    speedButton.Text = "Speed: OFF"
+    speedButton.BackgroundColor3 = Color3.fromRGB(35, 22, 60)
+    speedStroke.Color = Color3.fromRGB(110, 80, 180)
 end)
